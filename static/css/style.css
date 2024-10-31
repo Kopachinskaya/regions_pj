@@ -1,0 +1,583 @@
+/* Страница входа*/
+
+/* База*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+body.dark {
+    background-color: #1E1E1E;
+}
+body.white {
+    background-color: #fff;
+}
+a {
+    text-decoration: none;
+}
+.button {
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.button--primary {
+    background-color: #414FB5;
+    color: #fff;
+    border: 1px solid #414FB5;
+    transition: background-color .3s;
+}
+.button--primary:hover {
+    background-color: #5d70ff;
+}
+.button--secondary {
+    border: 2px solid #414FB5;
+    border-radius: 20px;
+    padding: 0 20px;
+    transition: all .3s;
+}
+.dark .container {
+    max-width: 1780px;
+    width: 100%;
+    margin: 0 auto;
+}
+.white .container {
+    max-width: 1780px;
+    width: 100%;
+    margin: 0 auto;
+}
+.index-main {
+    height: 94.2vh;
+}
+.index-section {
+    display: flex;
+    height: 100%;
+}
+.index-wrap {
+    display: flex;
+    justify-content: center;
+}
+.submission-title {
+    color: #ffffff;
+    font-family: 'Bowler', sans-serif;
+    font-size: 75px;
+    margin-bottom: 50px;
+}
+.submission-title .tko {
+    color: #3847B1;
+}
+
+.logo {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    height: 60px;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 785px;
+    width: 100%;
+}
+.right-section-wrap {
+    display: flex;
+    align-items: flex-end;
+    max-width: 620px;
+    width: 100%;
+}
+.right-section {
+    position: relative;
+    background: url('../img/phone.svg') no-repeat bottom / cover;
+    background-size: 90% 90%;
+    width: 100%;
+    max-height: 786px;
+    height: 100%;
+}
+
+.rectangle {
+    position: relative;
+    background-color: #292929;
+    margin: 10px 0;
+    padding: 20px;
+    font-size: 15px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+    border-left: 8px solid transparent;
+    transition: .3s;
+    max-width: 680px; /* Фиксированная ширина */
+}
+.rectangle.active {
+    background-color: #3847B1;
+    color: #1E1E1E;
+}
+/* @media screen and (max-width: 1505px) {
+    .dark .container {
+        width: 95%;
+    }
+}
+@media screen and (max-width: 1250px) {
+    .submission-title {
+        font-size: ;
+    }
+} */
+.phone-mockup {
+    position: absolute;
+    top: calc(52% - 150px);
+    left: calc(50% - 225px);
+    max-width: 452px;
+    width: 100%;
+    max-height: 515px;
+    height: 100%;
+    background-color: #333;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+.phone-content {
+    width: 100%;
+    height: 100%;
+}
+
+.phone-content-item {
+    display: none;
+    color: #fff;
+    font-size: 24px;
+    padding: 42px 0 75px;
+    width: 100%;
+}
+.phone-content-item > * {
+    padding: 0 33px;
+}
+.phone-content-item.active {
+    display: block;
+}
+.phone-content-item__title {
+    font-size: 24px;
+    padding-bottom: 14px;
+    margin-bottom: 17px;
+    border-bottom: 3px dotted #fff;
+}
+.phone-content-item__img {
+    padding: 0;
+    width: 100%;
+}
+.phone-content-item__form {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 33px 50px;
+    border-bottom: 1px solid #fff;
+}
+
+.password-container {
+    position: relative;
+    display: inline-block;
+}
+
+.phone-content-item-form__input {
+    height: 66px;
+    border-radius: 10px;
+    right: 10px;
+    text-indent: 30px;
+    margin-bottom: 20px;
+    padding-right: 40px; /* Оставляем место для иконки внутри поля */
+    width: 100%; /* Поле ввода будет растягиваться по ширине родителя */
+}
+
+.phone-content-item-form__input[placeholder] {
+    color: #3847B1;
+}
+
+#eyeIcon {
+    position: absolute;
+    right: 15px; /* Расстояние от правого края поля */
+    top: 50%; /* Центрирование по вертикали */
+    transform: translateY(-117%); /* Центрирование по вертикали */
+    cursor: pointer;
+    width: 17px; /* Задайте размер иконки */
+    height: 15px;
+}
+
+.phone-content-item-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 44px;
+}
+.phone-content-item-group__link {
+    color: #fff;
+    font-size: 16px;
+    transition: color .3s;
+}
+.phone-content-item-group__link:hover {
+    color: #414FB5;
+}
+.phone-content-item-form__button {
+    padding: 17px 0;
+    font-size: 24px;
+}
+/* Стиль для вертикальной и горизонтальной полосы прокрутки */
+::-webkit-scrollbar {
+    width: 8px;  /* Ширина вертикальной полосы прокрутки */
+    height: 8px; /* Высота горизонтальной полосы прокрутки */
+    border-radius: 17px; /* Радиус полосы прокрутки */
+}
+    
+/* Цвет фона полосы прокрутки */
+::-webkit-scrollbar-track {
+    background-color: transparent; /* Полоса прокрутки без заливки */
+    border: 1px solid #3847B1; /* Контур полосы прокрутки */
+    border-radius: 8px;
+    padding: 2px; /* Отступы внутри полосы прокрутки */
+}
+
+/* Стиль для ползунка (thumb) */
+::-webkit-scrollbar-thumb {
+    border-radius: 8px; /* Радиус ползунка */
+    background-color: #3847B1; /* Цвет заливки ползунка */    
+    border: 0.4px solid transparent; /* Создаем внутренний отступ у ползунка */
+    box-shadow: inset 0 0 0 2px #3847B1; /* Отступ ползунка внутри скроллбара */
+}
+    
+/* Псевдоклассы для стилизации при наведении */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #3847B1; /* Ползунок при наведении */
+}
+
+/*Кнопка "Нижняя подложка"*/
+footer {
+    background-color: #D9D9D9;
+    font-family: 'Gotham Pro', sans-serif;
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    text-align: center;
+    font-size: 10px;
+    width: 100%;
+    position: relative; /* Позиционирование для подъёма */
+    bottom: 2%; /* Поднимаем на 2% вверх */ 
+    flex-shrink: 0;
+    font-size: 0.8vw;
+    
+}
+
+/* Страница входа*/
+/* ____________________________________________________ */
+
+
+/* Header Section */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-bottom: 2px solid #ccc;
+}
+.header-right {
+    display: flex;
+}
+.header__edit-button {
+    margin-right: 1rem;
+}
+/* Left side - Account */
+.account {
+    display: flex;
+    align-items: center;
+}
+
+.account img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform .3s;
+}
+
+.account img:hover {
+    transform: scale(1.2);
+}
+
+.account-name {
+    display: none;
+    margin-left: 10px;
+    font-size: 16px;
+}
+.account-name.active {
+    display: block;
+}
+/* Right side - Search */
+.search-box {
+    border: 2px solid #3847B1;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding-left: 10px;
+    width: 200px;
+}
+
+.search-box input::placeholder {
+    color: #3847B1;
+}
+
+.search-box input:hover::placeholder,
+.search-box input:focus::placeholder {
+    color: #000;
+}
+
+/* Окно подсказок ввода */
+.suggestions {
+    position: absolute;
+    top: 105%; /* Расположить прямо под полем ввода */
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-top: none;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000; /* Убедитесь, что подсказки перекрывают другие элементы */
+}
+
+.suggestions div {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestions div:hover {
+    background-color: #f0f0f0;
+}
+
+
+/* Table Styles */
+.table-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+.white .container {
+    padding: 50px 0;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.info-table {
+    background-color: #fff;
+}
+.info-table .dis-flex-col {
+    display: flex;
+    flex-direction: column;
+}
+.info-table .text-at-start {
+    text-align: start;
+}
+.info-table .font-weight-normal,
+.info-table .font-weight-normal td {
+    font-weight: normal;
+}
+.info-table .font-weight-bold  {
+    font-weight: bold !important;
+}
+.info-table .table-cell-title {
+    font-size: 18px;
+}
+.info-table .secondary-title {
+    background-color: #D0CECE;
+}
+.info-table .info-table-thead th {
+    background-color: #3847B1;
+    color: #fff;
+}
+.info-table .info-table-thead__title {
+    border: none;
+    font-size: 32px;
+}
+.info-table .info-table-thead__title:nth-of-type(1) {
+    text-align: start;
+}
+.info-table .info-table-thead__title:nth-of-type(2) {
+    text-align: end;
+}
+.info-table .info-table-td {
+    padding: 0;
+    border: none;
+    margin-bottom: 20px;
+}
+.info-table .info-table-td table td {
+    color: #000;
+}
+.info-table .info-table-td table .spcified-color {
+    color: #3847B1;
+}
+.info-table .spcified-color tr td {
+    color: #3847B1;
+}
+.info-table .info-table-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+.info-table .info-table-header__item {
+    text-align: start;
+    color: #3847B1;
+    font-weight: bold;
+}
+.info-table .info-table-header__item:nth-of-type(1) {
+    position: relative;
+    padding: 25px 0;
+    background-color: #3847B1;
+    color: #fff;
+    margin-right: 50px;
+    padding-left: 20px;
+}
+.info-table .info-table-header__item:nth-of-type(1)::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 23.5px);
+    right: -24px;
+    width: 48px;
+    height: 48px;
+    transform: rotate(45deg);
+    background-color: #3847B1;
+    z-index: 1;
+}
+.info-table .info-table-header__item:nth-of-type(2) {
+    position: relative;
+    margin-right: 100px;
+    padding-right: 20px;
+}
+.info-table .info-table-header__item:nth-of-type(2)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -50px;
+    height: 100%;
+    width: 38px;
+    background: url('../img/left-arrow.png') no-repeat center / cover;
+}
+.info-table .info-table-header-leader {
+    display: flex;
+    flex-direction: column;
+}
+.info-table .info-table-header__item:nth-of-type(1) p {
+    position: relative;
+    z-index: 2;
+}
+.info-table .info-table-header__leader-name {
+    color: #3A4A6A;
+}
+.info-table .info-table-header__item:nth-of-type(2) p {
+    position: relative;
+    z-index: 2;
+}
+.info-table .info-table-name,
+.info-table .info-table-company-reasons {
+    text-align: start;
+}
+.cart {
+    max-width: 50%;
+    width: 100%;
+}
+.plan, .fact,  .deivation, .event{
+    max-width: 12.5%;
+    width: 100%;
+}
+.info-table .editable-table table td {
+    position: relative;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-all; 
+    white-space: normal;
+}
+.info-table .editable-table table td.edit-active {
+    transition: background-color .3s;
+}
+.info-table .editable-table table td::before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 10px);
+    right: 2%;
+    width: 20px;
+    height: 20px;
+    background: url('../img/pencil.png') no-repeat center / cover;
+    transition: transform .3s;
+    transform: scale(0);
+}
+.info-table .editable-table table td.edit-active::before {
+    transition: all .3s;
+    transform: scale(1);
+}
+.info-table .editable-table table td.edit-active:focus {
+    background-color: #d1e6ff;
+}
+.info-table th, 
+.info-table td {
+    padding: 10px 20px;
+    text-align: center;
+}
+.info-table td {
+    border: 1px solid #ccc;
+    font-weight: bold;
+}
+.info-table th {
+    font-size: 20px;
+    background-color: #EBECF7;
+    border: 1px solid #ccc;
+    color: #3847B1;
+}
+
+.info-table .highlight-yellow {
+    background-color: #FFD966;
+}
+
+.info-table .highlight-red {
+    background-color: #ff4d4d;
+}
+
+.info-table .highlight-green {
+    background-color: #A9D18E;
+}
+
+/* Button */
+.generate-btn {
+    display: block;
+    margin: 0 auto;
+    background-color: #3847B1;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.generate-btn:hover {
+    background-color: #2c3a94;
+}
+
+.highlight-green {
+    color: #A9D18E; /* Зеленый цвет */
+}
+
+.highlight-red {
+    color: #ff4d4d; /* Красный цвет */
+}
