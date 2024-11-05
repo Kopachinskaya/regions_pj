@@ -14,10 +14,10 @@ def form():
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
+    region =  request.form.get('regionSearchInput')
+    place_plan = request.values.get('places_plan')
+    place_fact = request.values.get('places_fact')
     if request.method == 'POST':
-        region =  request.form.get('regionSearchInput')
-        place_plan = request.values.get('places_plan')
-        place_fact = request.values.get('places_fact')
         data = dshb.data_to_web(region)
         template = render_template('page1.html',
                                 data = data, 
@@ -26,9 +26,11 @@ def dashboard():
     else:
         template = render_template('page_placeholder.html', 
                                    page_name= 'Dashboard')
-        if request.method == 'POST':
-            return redirect(url_for('dashboard'))
         
     return template
+
+# @app.route('/dashboard.json', methods = ['GET', 'POST'])
+# def get_data():
+
 if __name__ == '__main__':
     app.run(debug=True)

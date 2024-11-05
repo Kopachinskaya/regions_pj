@@ -14,7 +14,7 @@
         <div class="account">
             <img src="./static/img/account.png" alt="Account Icon" onclick="showAccountName()">
             <div class="account-name">
-                Азарова В.И. / <a href="index.html">Выход</a>
+                Азарова В.И. / <a href="/">Выход</a>
             </div>
         </div>
         <div class="header-right">
@@ -30,6 +30,8 @@
     <!-- Main Content -->
     <main>
         <div class="container">
+            <!-- Обернули таблицы в форму action="/submit-url" -->
+            <form  method="POST" id = "table-data-info"> <!--напиши нужный URL в action -->
             <table class="info-table">
                 <thead class="info-table-thead">
                     <tr>
@@ -310,11 +312,20 @@
                 <!-- /.info-table-tbody -->
             </table>
             <!-- /.info-table -->
-            <button class="generate-btn">Сгенерировать слайды</button>
+
+                        <!-- Кнопки для отправки формы и генерации ответа formaction="/save-data-url"-->
+            <div class="button-container">
+                <!-- Кнопка для сохранения данных -->
+                <button name = "submit-api" type="submit"  class="button button--primary">Сохранить данные</button> 
+                <!-- Кнопка для генерации ответа -->
+                <button type="button" onclick="generateResponse()" class="button button--secondary">Сгенерировать слайды</button> 
+                    </div>
+                    </form> 
         </div>
         <!-- /.container -->
     </main>
     <script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename= 'js/apiSubscription.js') }}"></script>
     <script src="./static/js/showAccountInfo.js"></script>
     <script src="./static/js/showSuggestions.js"></script>
     <script src="./static/js/tableEditFunction.js"></script>

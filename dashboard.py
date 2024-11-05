@@ -8,7 +8,7 @@ def open_dashboard_4_region(region):
 
     """Open dashboard and create DFs"""
 
-    xls = pd.read_excel(r"project-regions\\2024.10.10 Дашборд.xlsm", sheet_name=['Свод', 'Контейнеры', 'МНО'])
+    xls = pd.read_excel(r"2024.10.10 Дашборд.xlsm", sheet_name=['Свод', 'Контейнеры', 'МНО'])
     dashboard_df = xls['Свод']
     containers_df = xls['Контейнеры']
     container_places_df = xls['МНО']

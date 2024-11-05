@@ -1,4 +1,6 @@
-PyMuPDF 
+pillow
 pandas
 numpy
+flask
+openpyxl
 

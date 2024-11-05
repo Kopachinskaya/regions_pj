@@ -23,10 +23,13 @@ a {
     background: transparent;
     border-radius: 10px;
     cursor: pointer;
+    padding: 10px 20px; /* Добавление отступов для кнопок */
+    margin: 0 40px; /* Отступы между кнопками */
 }
 .button--primary {
     background-color: #414FB5;
     color: #fff;
+    border-radius: 20px;
     border: 1px solid #414FB5;
     transition: background-color .3s;
 }
@@ -38,6 +41,10 @@ a {
     border-radius: 20px;
     padding: 0 20px;
     transition: all .3s;
+}
+.button-container {
+    display: flex; /* Используем Flexbox для расположения кнопок в строку */
+    justify-content: space-between; /* Раздвигаем кнопки по краям */
 }
 .dark .container {
     max-width: 1780px;
@@ -518,7 +525,6 @@ table {
     right: 2%;
     width: 20px;
     height: 20px;
-    background: url('../img/pencil.png') no-repeat center / cover;
     transition: transform .3s;
     transform: scale(0);
 }
