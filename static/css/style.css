@@ -44,7 +44,37 @@ a {
 }
 .button-container {
     display: flex; /* Используем Flexbox для расположения кнопок в строку */
+}
+.bottom-buttons {
+    display: flex; /* Используем Flexbox для расположения кнопок в строку */
     justify-content: space-between; /* Раздвигаем кнопки по краям */
+}
+.red-button {
+    background-color: red; /* Красный фон */
+    color: white; /* Белый текст */
+}
+
+.yellow-button {
+    background-color: yellow; /* Желтый фон */
+    color: black; /* Черный текст для контраста */
+}
+
+.green-button {
+    background-color: green; /* Зеленый фон */
+    color: white; /* Белый текст */
+}
+
+/* Общие стили для кнопок */
+.button-container button {
+    border: none; /* Убираем рамку */
+    border-radius: 15px; /* Закругленные углы */
+    padding: 5px 10px; /* Отступы внутри кнопки */
+    cursor: pointer; /* Указатель при наведении */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+
+.button-container button:hover {
+    opacity: 0.8; /* Эффект при наведении */
 }
 .dark .container {
     max-width: 1780px;

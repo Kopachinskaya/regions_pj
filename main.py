@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import dashboard as dshb
-from collections import defaultdict
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -14,14 +14,13 @@ def form():
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
-    region =  request.form.get('regionSearchInput')
-    place_plan = request.values.get('places_plan')
-    place_fact = request.values.get('places_fact')
+    region =  request.values.get('regionSearchInput')
+    session['region'] = region
     if request.method == 'POST':
         data = dshb.data_to_web(region)
         template = render_template('page1.html',
                                 data = data, 
-                                region = region, 
+                                region = region,
                                 page_name= 'Dashboard')
     else:
         template = render_template('page_placeholder.html', 
@@ -29,8 +28,27 @@ def dashboard():
         
     return template
 
-# @app.route('/dashboard.json', methods = ['GET', 'POST'])
-# def get_data():
+@app.route('/dashboard.json', methods = ['GET','POST'])
+def get_data():
+    region = session.get('region')
+    values = request.get_json()
+    print(values)
+    return jsonify({"region":region, "response": values})
+
+@app.route('/dashboard_to_save', methods = ['GET', 'POST'])
+def to_save():
+    region =  request.values.get('regionSearchInput')
+    if request.method == 'POST':
+        data = dshb.data_to_web(region)
+        template = render_template('page2.html',
+                                data = data, 
+                                region = region,
+                                page_name= 'Dashboard')
+    else:
+        template = render_template('page_placeholder.html', 
+                                   page_name= 'Dashboard')
+        
+    return template
 
 if __name__ == '__main__':
     app.run(debug=True)

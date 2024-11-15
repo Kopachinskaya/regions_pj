@@ -1,5 +1,4 @@
 import pandas as pd
-import fitz
 import numpy as np
 import openpyxl
 
@@ -11,7 +10,9 @@ def open_dashboard_4_region(region):
     xls = pd.read_excel(r"2024.10.10 Дашборд.xlsm", sheet_name=['Свод', 'Контейнеры', 'МНО'])
     dashboard_df = xls['Свод']
     containers_df = xls['Контейнеры']
+    containers_df.name = 'Контейнеры'
     container_places_df = xls['МНО']
+    container_places_df.name = 'МНО'
     ind_of_state = dashboard_df.loc[dashboard_df.loc[dashboard_df[3] == '{}'.format(region)].index,3]
 
     return dashboard_df, containers_df, container_places_df, ind_of_state
@@ -35,22 +36,25 @@ def table_info_for_subject(dataframe, ind_of_state, columns: list,  plan = None,
 def per_1k_ahd_fgis_utko(dataframe, new_info, region, columns: list)-> list:
   population = dataframe.loc[dataframe.loc[dataframe[columns[0]] == '{}'.format(region)].index,columns[1]]
   fact_TS = dataframe.loc[dataframe.loc[dataframe[columns[0]] == '{}'.format(region)].index,columns[2]]
-  container_per_1k = new_info[1].iloc[0]/population.iloc[0]*1000
+  if dataframe.name == "МНО":
+    container_per_1k = fact_TS.iloc[0]/population.iloc[0]*1000
+  if dataframe.name == "Контейнеры":
+    container_per_1k = new_info[1].iloc[0]/population.iloc[0]*1000
   if np.isnan(container_per_1k):
-     container_per_1k = "--"
+     container_per_1k = 0
   fgis_utko = (new_info[1].iloc[0]/np.max([new_info[1].iloc[0], fact_TS.iloc[0]]))
   if not np.isnan(fgis_utko):
      fgis_utko = int(fgis_utko)*100
   else:
-     fgis_utko = '--'
+     fgis_utko = 0
   return container_per_1k, fgis_utko
 
 def all_info_4_rus(dataframe):
-    tech_lack = round(np.mean(dataframe.loc[9:,17])*100, 1)
-    places_lack = round(np.mean(dataframe.loc[9:,26])*100, 1)
-    places_per_1k = round(np.mean(dataframe.loc[9:,28]))
-    containers_lack = round(np.mean(dataframe.loc[9:,33])*100, 1)
-    containers_per_1k = round(np.mean(dataframe.loc[9:,35]))
+    tech_lack = round(dataframe.loc[8,17]*100,1)
+    places_lack = round(dataframe.loc[8,26]*100, 1)
+    places_per_1k = round(dataframe.loc[8,28])
+    containers_lack = round(dataframe.loc[8,33]*100, 1)
+    containers_per_1k = round(dataframe.loc[8,35],1)
     return [tech_lack, places_lack, places_per_1k, containers_lack, containers_per_1k]
 
 
