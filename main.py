@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, json
+from flask_restful import Api, Resource 
 import dashboard as dshb
 import requests
+import json
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -23,32 +26,19 @@ def dashboard():
                                 region = region,
                                 page_name= 'Dashboard')
     else:
-        template = render_template('page_placeholder.html', 
+        template = render_template('page2.html', 
                                    page_name= 'Dashboard')
         
     return template
 
-@app.route('/dashboard.json', methods = ['GET','POST'])
+@app.route('/dashboard_api', methods = ['GET','POST'])
 def get_data():
-    region = session.get('region')
-    values = request.get_json()
-    print(values)
-    return jsonify({"region":region, "response": values})
+    values = request.get_json(cache=True)
+    data = dshb.clean_data(values)
+    dshb.rewrite_new_data_to_xlxs(data)
+    response = jsonify({"response": values})
+    return response
 
-@app.route('/dashboard_to_save', methods = ['GET', 'POST'])
-def to_save():
-    region =  request.values.get('regionSearchInput')
-    if request.method == 'POST':
-        data = dshb.data_to_web(region)
-        template = render_template('page2.html',
-                                data = data, 
-                                region = region,
-                                page_name= 'Dashboard')
-    else:
-        template = render_template('page_placeholder.html', 
-                                   page_name= 'Dashboard')
-        
-    return template
 
 if __name__ == '__main__':
     app.run(debug=True)

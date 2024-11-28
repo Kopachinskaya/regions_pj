@@ -10,7 +10,7 @@
     <title>Организация обращения с ТКО</title>
 </head>
 
-<body class="white">
+<body class="white" onclick= "getValues()">
     <header class="header">
         <div class="account">
             <img src="./static/img/account.png" alt="Account Icon" onclick="showAccountName()">
@@ -124,7 +124,8 @@
                             <table id = "info-table">
                                 <thead class="info-table-thead">
                                     <tr>
-                                        <th class="info-table-thead__title"> {{region}} (2/3)</th>
+                                        <th class="info-table-thead__title" id="th_region" name="region">{{region}} (2/3)</th>
+                                        <input type="hidden" id = "region" name="region" value = "">
                                         <!-- /.info-table-thead__title -->
                                         <th class="info-table-thead__title" colspan="4">По состоянию на 10.10.2024</th>
                                         <!-- /.info-table-thead__title -->
@@ -141,53 +142,46 @@
                                 <tr>
                                     <td class="text-at-start">
                                         <span class="spcified-color">2. Обеспеченность специальной техникой, шт.</span>
-                                        (среднероссийский показатель потребности– {{data[3][0]}}%) <br>
+                                        (среднероссийский показатель потребности– {{data['all_RF_info']['tech_lack']}}%) <br>
                                         Выше среднероссийского показателя - желтая зона <br>
                                         В два раза выше среднероссийского показателя  - красная зона
                                         </td>
-                                    <td name="tech_plan">{{data[0]['Техника'][0]}}</td>
-                                    <input type="hidden" id = "tech_plan" name="tech_plan" value= "{{data[0]['Техника'][0]}}">
-                                    <td name="tech_fact">{{data[0]['Техника'][1]}}</td>
-                                    <input type="hidden" id = "tech_fact" name="tech_fact" value= "{{data[0]['Техника'][1]}}">
-                                    <td class="highlight-green">
-                                        {{data[0]['Техника'][2]}} (<span class="percent">{{data[0]['Техника'][3]}}</span>%)</td>
+                                    <td id = "td_tech_plan" name="tech_plan">{{data['tech_info']['plan']}}</td>
+                                    <input type="hidden" id = "tech_plan" name="tech_plan" value ="">
+                                    <td id = "td_tech_fact" name="tech_fact">{{data['tech_info']['fact']}}</td>
+                                    <input type="hidden" id = "tech_fact" name="tech_fact" value = "">
+                                    <td id = "td_tech_dev" name="tech_dev" class="highlight-green">{{data['tech_info']['deviation']}} (<span class="percent">{{data['tech_info']['deviation_in_per']}}</span>%)</td>
+                                    <input type="hidden" id = "tech_dev" name="tech_dev" value = "">
                                     <td class="spcified-color">Дорожная карта не требуется</td>
                                 </tr>
                                 <tr>
                                     <th colspan="5" class="text-at-start secondary-title">3. Обеспеченность инфраструктурой по накоплению ТКО</th>
                                 </tr>
                                 <tr>
-                                    <th class="cart">Корзины</th>
-                                    <th class="plan">План</th>
-                                    <th class="fact">Факт</th>
-                                    <th class="deivation">Отклонение</th>
-                                    <th class="event">Мероприятия из Дорожной карты</th>
-                                </tr>
-                                <tr>
                                     <td class="text-at-start dis-flex-col">
                                         <span class="spcified-color table-cell-title">3.1 Контейнерные площадки </span>
-                                        <span>(среднероссийский показатель потребности – {{data[3][1]}}%)</span>
+                                        <span>(среднероссийский показатель потребности – {{data['all_RF_info']['places_lack']}}%)</span>
                                         <span>Выше среднероссийского показателя - желтая зона</span>
                                         <span>В два раза выше среднероссийского показателя либо информация не представлена  - красная зона</span>                                            
                                     </td>
-                                    <td name = 'places_plan'>{{data[0]['Контейнерные площадки'][0]}}</td>
-                                    <input type="hidden" id = "places_plan" name="places_plan" value= "{{data[0]['Контейнерные площадки'][0]}}">
-                                    <td name = 'places_fact'>{{data[0]['Контейнерные площадки'][1]}}</td>
-                                    <input type="hidden" id = "places_fact" name="places_fact" value= "{{data[0]['Контейнерные площадки'][1]}}">
-                                    <td>
-                                        {{data[0]['Контейнерные площадки'][2]}} (<span class="percent">{{data[0]['Контейнерные площадки'][3]}}</span>%)
-                                    </td>
+                                    <td id = "td_places_plan" name = 'places_plan'>{{data['container_places_info']['plan']}}</td>
+                                    <input type="hidden" id = "places_plan" name="places_plan" value= "">
+                                    <td id = "td_places_fact" name = 'places_fact'>{{data['container_places_info']['fact']}}</td>
+                                    <input type="hidden" id = "places_fact" name="places_fact" value= "">
+                                    <td id = "td_places_dev" name = 'places_dev'>{{data['container_places_info']['deviation']}} (<span class="percent">{{data['container_places_info']['deviation_in_per']}}</span>%)</td>s
+                                    <input type="hidden" id = "places_dev" name="places_dev" value= "">
                                     <td class="spcified-color event" rowspan="3">Дорожная карта не утверждена</td>
                                 </tr>
                                 <tr>
                                     <td class="text-at-start dis-flex-col">
                                         <span class="spcified-color table-cell-title">3.1.1 контейнерные площадки на 1 000 чел.</span>
-                                        <span>(среднероссийский показатель – {{data[3][2]}} шт)</span>
+                                        <span>(среднероссийский показатель – {{data['all_RF_info']['places_per_1k']}} шт)</span>
                                     </td>
                                     <td>--</td>
-                                    <td>{{'%0.1f'| format(data[2][0]|float)}}</td>
+                                    <td id="td_container_places_per_1k" name="container_places_per_1k">{{'%0.1f'| format(data['container_places_info']['container_places_per_1k']|float)}}</td>
+                                    <input type="hidden" id="container_places_per_1k" name="container_places_per_1k" value= "">
                                     <td>
-                                        {{'%0.1f'| format((data[3][2]-data[2][0])|float|abs)}} (<span>{{((data[3][2]-data[2][0])/data[3][2]*100)|round|int|abs}}</span>%)
+                                        {{'%0.1f'| format((data['all_RF_info']['places_per_1k']-data['container_places_info']['container_places_per_1k'])|float|abs)}} (<span>{{((data['all_RF_info']['places_per_1k']-data['container_places_info']['container_places_per_1k'])/data['all_RF_info']['places_per_1k']*100)|round|int|abs}}</span>%)
                                     </td>
                                 </tr>
                                 <tr>
@@ -195,33 +189,35 @@
                                         <span class="spcified-color table-cell-title">3.1.2 заполнение ФGIS УТКО по местам накопления ТКО, %</span>
                                     </td>
                                     <td>100%</td>
-                                    <td>{{data[2][1]}}%</td>
-                                    <td><span>37????</span>%</td>
+                                    <td id="td_fgis_utko_places" name="fgis_utko_places">{{data['container_places_info']['fgis_utko']}}%</td>
+                                    <input type="hidden" id="fgis_utko_places" name="fgis_utko_places" value= "">
+                                    <td><span>{{100 - data['container_places_info']['fgis_utko']}}</span>%</td>
                                 </tr>
                                 <tr>
                                     <td class="text-at-start dis-flex-col">
                                         <span class="spcified-color table-cell-title">3.2 Контейнеры </span>
-                                        <span>(среднероссийский показатель потребности – {{data[3][3]}}%)</span>
+                                        <span>(среднероссийский показатель потребности – {{data['all_RF_info']['containers_lack']}}%)</span>
                                         <span>Выше среднероссийского показателя - желтая зона</span>
                                         <span>В два раза выше среднероссийского показателя либо информация не представлена  - красная зона</span>
                                     </td>
-                                    <td name = 'containers_plan'>{{data[0]['Количество контейнеров'][0]}}</td>
-                                    <input type="hidden" id = "containers_plan" name="containers_plan" value= "{{data[0]['Количество контейнеров'][0]}}">
-                                    <td name = 'containers_fact'>{{data[0]['Количество контейнеров'][1]}}</td>
-                                    <input type="hidden" id = "containers_fact" name="containers_fact" value= "{{data[0]['Количество контейнеров'][1]}}">
-                                    <td>{{data[0]['Количество контейнеров'][2]}} (<span class="percent">{{data[0]['Количество контейнеров'][3]}}</span>%)
-                                    </td>
+                                    <td id = "td_containers_plan" name = 'containers_plan'>{{data['containers_info']['plan']}}</td>
+                                    <input type="hidden" id = "containers_plan" name="containers_plan" value= "">
+                                    <td id = "td_containers_fact"name = 'containers_fact'>{{data['containers_info']['fact']}}</td>
+                                    <input type="hidden" id = "containers_fact" name="containers_fact" value= "">
+                                    <td id = "td_containers_dev" name = 'containers_dev'>{{data['containers_info']['deviation']}} (<span class="percent">{{data['containers_info']['deviation_in_per']}}</span>%)</td>
+                                    <input type="hidden" id = "containers_dev" name="containers_dev" value= "">
                                     <td class="spcified-color event" rowspan="3">Дорожная карта не утверждена</td>
                                 </tr>
                                 <tr>
                                     <td class="text-at-start">
                                         <span class="spcified-color table-cell-title">3.2.1 контейнеры на 1 000 чел.</span>
-                                        <span>(среднероссийский показатель – {{data[3][4]}} шт)</span>
+                                        <span>(среднероссийский показатель – {{data['all_RF_info']['containers_per_1k']}} шт)</span>
                                     </td>
                                     <td>--</td>
-                                    <td>{{'%0.1f'| format(data[1][0]|float)}}</td>
+                                    <td id="td_containers_per_1k" name="containers_per_1k">{{'%0.1f'| format(data['containers_info']['containers_per_1k']|float)}}</td>
+                                    <input type="hidden" id = "containers_per_1k" name="containers_per_1k" value= "">
                                     <td>
-                                        {{'%0.1f'| format((data[3][4]-data[1][0])|float|abs)}} (<span>{{((data[3][4]-data[1][0])/data[3][4]*100)|round|int|abs }}</span>%)
+                                        {{'%0.1f'| format((data['all_RF_info']['containers_per_1k']-data['containers_info']['containers_per_1k'])|float|abs)}} (<span>{{((data['all_RF_info']['containers_per_1k']-data['containers_info']['containers_per_1k'])/data['all_RF_info']['containers_per_1k']*100)|round|int|abs}}</span>%)
                                     </td>
                                 </tr>
                                 <tr>
@@ -229,8 +225,9 @@
                                         <span class="spcified-color table-cell-title table-cell-title">3.2.2 заполнение ФGIS УТКО на контейнеры ТКО, %</span>
                                     </td>
                                     <td>100%</td>
-                                    <td>{{data[1][1]}}%</td>
-                                    <td><span class="percent">--</span></td>
+                                    <td id="td_fgis_utko_containers" name="fgis_utko_containers">{{data['containers_info']['fgis_utko']}}%</td>
+                                    <input type="hidden" id = "fgis_utko_containers" name="fgis_utko_containers" value= "">
+                                    <td><span>{{100 - data['containers_info']['fgis_utko']}}</span>%</td>
                                 </tr>
                             </table>
                             <table>
@@ -319,7 +316,7 @@
                         <!-- Кнопки для отправки формы и генерации ответа formaction="/save-data-url"-->
             <div id="editor" class="button-container">
                 <!-- Кнопка для сохранения данных -->
-                <button name = "submit" type="submit"  class="button button--primary" >Сохранить данные</button> 
+                <button name = "submit" type="submit"  class="button button--primary">Сохранить данные</button> 
                 <!-- Кнопка для генерации ответа -->
                 <button id="exportButton" class="button button--secondary">Сгенерировать слайды</button> 
                     </div>
@@ -330,6 +327,7 @@
     <script src="{{ url_for('static', filename= 'js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename= 'js/apiSubscription.js') }}"></script>
     <script src="{{ url_for('static', filename= 'js/generateResponse.js') }}"></script>
+    <script src="{{ url_for('static', filename= 'js/tableChangesToApi.js') }}"></script>
     <script src="./static/js/showAccountInfo.js"></script>
     <script src="./static/js/showSuggestions.js"></script>
     <script src="./static/js/tableEditFunction.js"></script>
