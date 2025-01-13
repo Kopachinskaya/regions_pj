@@ -20,5 +20,8 @@
             
                 const result = await response.json();
                 console.log(result)
+<<<<<<< HEAD
                 window.location.reload()
+=======
+>>>>>>> refs/remotes/origin/main
             });

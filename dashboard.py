@@ -6,15 +6,25 @@ import os
 def calc_data(region, sheet_name, columns: list) -> list:
   """function for all necessary calculations from table sheets"""
   # open specifyed sheet from xlsx
+<<<<<<< HEAD
   data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name).fillna(0)
 
+=======
+  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name)
+>>>>>>> refs/remotes/origin/main
   #find region row
   ind_of_state = data_df.loc[data_df.loc[data_df[columns[1]] == '{}'.format(region)].index,[columns[0]]]
   #deviation between plan and fact
   row_data_dict = {}
+<<<<<<< HEAD
   deviation = data_df.loc[ind_of_state.index, [columns[3]]].fillna(0)
   fact = data_df.loc[ind_of_state.index, [columns[2]]].fillna(0)
   plan = (deviation.values + fact.values)
+=======
+  deviation = data_df.loc[ind_of_state.index, [columns[3]]]
+  fact = data_df.loc[ind_of_state.index, [columns[2]]]
+  plan = deviation.values + fact.values
+>>>>>>> refs/remotes/origin/main
   if plan.item() == 0:
     dev_per = 0
   else:
@@ -30,10 +40,14 @@ def calc_data(region, sheet_name, columns: list) -> list:
   #info per 1000 for container places
   if  sheet_name=='МНО':
     population = data_df.loc[data_df.loc[data_df[2] == '{}'.format(region)].index,8].values.item()
+<<<<<<< HEAD
     if population!=0:
       container_places_per_1k = row_data_dict["fact"]/population*1000
     else:
       container_places_per_1k = 0
+=======
+    container_places_per_1k = row_data_dict["fact"]/population*1000
+>>>>>>> refs/remotes/origin/main
     row_data_dict["container_places_per_1k"] = round(container_places_per_1k, 1)
     #info fgis utko for container places
     fgis_utko = data_df.loc[data_df.loc[data_df[2] == '{}'.format(region)].index,19].values.item()
@@ -45,10 +59,14 @@ def calc_data(region, sheet_name, columns: list) -> list:
   #info per 1000 for containers
   if sheet_name=='Контейнеры':
     population = data_df.loc[data_df.loc[data_df['Unnamed: 1'] == '{}'.format(region)].index,'Unnamed: 7'].values.item()
+<<<<<<< HEAD
     if population != 0:
       containers_per_1k = row_data_dict["fact"]/population*1000
     else:
       containers_per_1k = 0
+=======
+    containers_per_1k = row_data_dict["fact"]/population*1000
+>>>>>>> refs/remotes/origin/main
     row_data_dict["containers_per_1k"] = round(containers_per_1k, 1)
     #info fgis utko for containers
     fgis_utko = data_df.loc[data_df.loc[data_df['Unnamed: 1'] == '{}'.format(region)].index,'Unnamed: 18'].values.item()
