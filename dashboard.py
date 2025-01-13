@@ -1,78 +1,119 @@
 import pandas as pd
 import numpy as np
 import openpyxl
+import os
 
+def calc_data(region, sheet_name, columns: list) -> list:
+  """function for all necessary calculations from table sheets"""
+  # open specifyed sheet from xlsx
+  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name).fillna(0)
 
-def open_dashboard_4_region(region):
-
-    """Open dashboard and create DFs"""
-
-    xls = pd.read_excel(r"2024.10.10 Дашборд.xlsm", sheet_name=['Свод', 'Контейнеры', 'МНО'])
-    dashboard_df = xls['Свод']
-    containers_df = xls['Контейнеры']
-    containers_df.name = 'Контейнеры'
-    container_places_df = xls['МНО']
-    container_places_df.name = 'МНО'
-    ind_of_state = dashboard_df.loc[dashboard_df.loc[dashboard_df[3] == '{}'.format(region)].index,3]
-
-    return dashboard_df, containers_df, container_places_df, ind_of_state
-
-def table_info_for_subject(dataframe, ind_of_state, columns: list,  plan = None, fact = None) -> list:
-  if plan:
-    plan = pd.Series([plan], index = ind_of_state.index)
+  #find region row
+  ind_of_state = data_df.loc[data_df.loc[data_df[columns[1]] == '{}'.format(region)].index,[columns[0]]]
+  #deviation between plan and fact
+  row_data_dict = {}
+  deviation = data_df.loc[ind_of_state.index, [columns[3]]].fillna(0)
+  fact = data_df.loc[ind_of_state.index, [columns[2]]].fillna(0)
+  plan = (deviation.values + fact.values)
+  if plan.item() == 0:
+    dev_per = 0
   else:
-    plan = dataframe.loc[ind_of_state.index, columns[0]]
-  if fact:
-    fact = pd.Series([fact], index = ind_of_state.index)
+    dev_per = (deviation / plan)*100
+  #fill dict values
+  row_data_dict["plan"] = plan.item()
+  row_data_dict["fact"] = fact.values.item()
+  row_data_dict["deviation"] = (plan-fact).values.item()
+  if row_data_dict["plan"]!= 0:
+    row_data_dict["deviation_in_per"] = round(dev_per.values.item())
   else:
-      fact = dataframe.loc[ind_of_state.index, columns[1]]
-  deviation = plan - fact
-  if deviation.item() == 0:
-    deviation_in_per = pd.Series(0)
-  else:
-    deviation_in_per = pd.Series(int((deviation / plan)*100))
-  return plan, fact, pd.Series(int(deviation)), deviation_in_per
-
-def per_1k_ahd_fgis_utko(dataframe, new_info, region, columns: list)-> list:
-  population = dataframe.loc[dataframe.loc[dataframe[columns[0]] == '{}'.format(region)].index,columns[1]]
-  fact_TS = dataframe.loc[dataframe.loc[dataframe[columns[0]] == '{}'.format(region)].index,columns[2]]
-  if dataframe.name == "МНО":
-    container_per_1k = fact_TS.iloc[0]/population.iloc[0]*1000
-  if dataframe.name == "Контейнеры":
-    container_per_1k = new_info[1].iloc[0]/population.iloc[0]*1000
-  if np.isnan(container_per_1k):
-     container_per_1k = 0
-  fgis_utko = (new_info[1].iloc[0]/np.max([new_info[1].iloc[0], fact_TS.iloc[0]]))
-  if not np.isnan(fgis_utko):
-     fgis_utko = int(fgis_utko)*100
-  else:
-     fgis_utko = 0
-  return container_per_1k, fgis_utko
+    row_data_dict["deviation_in_per"] = 0
+  #info per 1000 for container places
+  if  sheet_name=='МНО':
+    population = data_df.loc[data_df.loc[data_df[2] == '{}'.format(region)].index,8].values.item()
+    if population!=0:
+      container_places_per_1k = row_data_dict["fact"]/population*1000
+    else:
+      container_places_per_1k = 0
+    row_data_dict["container_places_per_1k"] = round(container_places_per_1k, 1)
+    #info fgis utko for container places
+    fgis_utko = data_df.loc[data_df.loc[data_df[2] == '{}'.format(region)].index,19].values.item()
+    if not np.isnan(fgis_utko):
+      fgis_utko = fgis_utko*100
+    else:
+      fgis_utko = 0
+    row_data_dict["fgis_utko"] = round(fgis_utko)
+  #info per 1000 for containers
+  if sheet_name=='Контейнеры':
+    population = data_df.loc[data_df.loc[data_df['Unnamed: 1'] == '{}'.format(region)].index,'Unnamed: 7'].values.item()
+    if population != 0:
+      containers_per_1k = row_data_dict["fact"]/population*1000
+    else:
+      containers_per_1k = 0
+    row_data_dict["containers_per_1k"] = round(containers_per_1k, 1)
+    #info fgis utko for containers
+    fgis_utko = data_df.loc[data_df.loc[data_df['Unnamed: 1'] == '{}'.format(region)].index,'Unnamed: 18'].values.item()
+    if not np.isnan(fgis_utko):
+      fgis_utko = fgis_utko*100
+    else:
+      fgis_utko = 0
+    row_data_dict["fgis_utko"] = round(fgis_utko)
+  return row_data_dict
 
 def all_info_4_rus(dataframe):
-    tech_lack = round(dataframe.loc[8,17]*100,1)
-    places_lack = round(dataframe.loc[8,26]*100, 1)
-    places_per_1k = round(dataframe.loc[8,28])
-    containers_lack = round(dataframe.loc[8,33]*100, 1)
-    containers_per_1k = round(dataframe.loc[8,35],1)
-    return [tech_lack, places_lack, places_per_1k, containers_lack, containers_per_1k]
-
+    """function for all info for the RF collectioning"""
+    data_4_RF = {}
+    data_4_RF['tech_lack'] = round(dataframe.loc[8,17]*100,1)
+    data_4_RF['places_lack'] = round(dataframe.loc[8,26]*100, 1)
+    data_4_RF['places_per_1k'] = round(dataframe.loc[8,28])
+    data_4_RF['containers_lack'] = round(dataframe.loc[8,33]*100, 1)
+    data_4_RF['containers_per_1k'] = round(dataframe.loc[8,35],1)
+    return data_4_RF
 
 def data_to_web(region):
-    data = open_dashboard_4_region(region)
-    new_table_tech_info_for_subject = table_info_for_subject(data[0], data[3], columns = [14, 15])
-    new_container_places_info_for_subject = table_info_for_subject(data[0], data[3], columns = [23, 24])
-    new_container_number_info_for_subject = table_info_for_subject(data[0], data[3], columns = [30, 31])
-    #Строчка с изменением данных в таблице
-    container_number_per_1k_ahd_fgis_utko = per_1k_ahd_fgis_utko(data[1], new_container_number_info_for_subject, region, columns=['Unnamed: 1', 'Unnamed: 7', 'Unnamed: 10'])
-    container_places_per_1k_ahd_fgis_utko = per_1k_ahd_fgis_utko(data[2], new_container_places_info_for_subject, region, columns=[2, 8, 10])
-    data_to_web = [{'Техника':[value.values[0] for value in new_table_tech_info_for_subject],
-             'Контейнерные площадки':[value.values[0] for value in new_container_places_info_for_subject],
-             'Количество контейнеров': [value.values[0] for value in new_container_number_info_for_subject]}, 
-             container_number_per_1k_ahd_fgis_utko, 
-             container_places_per_1k_ahd_fgis_utko, all_info_4_rus(data[0])]
-    return data_to_web
+  data_to_web = {}
+  data_to_web['tech_info'] = calc_data(region, sheet_name='Спецтехника', columns=['Unnamed: 0','Unnamed: 1', 'Unnamed: 5', 'Unnamed: 6'])
+  data_to_web['container_places_info'] = calc_data(region, sheet_name='МНО', columns=[1,2,9,12])
+  data_to_web['containers_info'] = calc_data(region, sheet_name='Контейнеры', columns=["Unnamed: 0","Unnamed: 1","Unnamed: 8","Unnamed: 11"])
+  data_to_web['all_RF_info'] = all_info_4_rus(pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name='Свод'))
+  return data_to_web
+
+def clean_data(data):
+  for key, value in data.items():
+    if value.endswith('(2/3)'):
+      data[key] = value[:-6]
+    if value.endswith(')') and key!='region':
+      data[key] = value.split(' (')[0]
+    if value.endswith('%'):
+      data[key] = value[:-1]
+  return data
+
+def rewrite_new_data_to_xlxs(data):
+  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=['Свод', 'Контейнеры', 'МНО', 'Спецтехника'])
+
+  #technika
+  data_df['Спецтехника'].loc[data_df['Спецтехника'].index[data_df['Спецтехника']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 4'] = int(data['tech_plan'])
+  data_df['Спецтехника'].loc[data_df['Спецтехника'].index[data_df['Спецтехника']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 5'] = int(data['tech_fact'])
+  data_df['Спецтехника'].loc[data_df['Спецтехника'].index[data_df['Спецтехника']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 6'] = int(data['tech_dev'])
+  #container_places
+  data_df['МНО'].loc[data_df['МНО'].index[data_df['МНО'][2].values == '{}'.format(data['region'])], 17] = int(data['places_plan'])
+  data_df['МНО'].loc[data_df['МНО'].index[data_df['МНО'][2].values == '{}'.format(data['region'])], 9] = int(data['places_fact'])
+  data_df['МНО'].loc[data_df['МНО'].index[data_df['МНО'][2].values == '{}'.format(data['region'])], 12] = int(data['places_dev'])
+  data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 28] = float(data['container_places_per_1k'])
+  data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 29] = float(data['fgis_utko_places'])/100
+  #containers
+  data_df['Контейнеры'].loc[data_df['Контейнеры'].index[data_df['Контейнеры']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 16'] = int(data['containers_plan'])
+  data_df['Контейнеры'].loc[data_df['Контейнеры'].index[data_df['Контейнеры']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 8'] = int(data['containers_fact'])
+  data_df['Контейнеры'].loc[data_df['Контейнеры'].index[data_df['Контейнеры']['Unnamed: 1'].values == '{}'.format(data['region'])], "Unnamed: 11"] = int(data['containers_dev'])
+  data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 35] = float(data['containers_per_1k'])
+  data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 36] = float(data['fgis_utko_containers'])/100
 
 
-# region = 'Камчатский край'
+  with pd.ExcelWriter(r"2024.10.10 Дашборд.xlsx", engine='openpyxl') as writer:
+      data_df['Свод'].to_excel(writer, sheet_name='Свод')
+      data_df['Спецтехника'].to_excel(writer, sheet_name='Спецтехника')
+      data_df['МНО'].to_excel(writer, sheet_name='МНО')
+      data_df['Контейнеры'].to_excel(writer, sheet_name='Контейнеры')
+
+
+# region = 'Астраханская область'
 # print(data_to_web(region))

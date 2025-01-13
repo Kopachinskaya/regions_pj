@@ -24,7 +24,7 @@ a {
     border-radius: 10px;
     cursor: pointer;
     padding: 10px 20px; /* Добавление отступов для кнопок */
-    margin: 0 40px; /* Отступы между кнопками */
+    margin: 0 5px; /* Отступы между кнопками */
 }
 .button--primary {
     background-color: #414FB5;
@@ -41,6 +41,7 @@ a {
     border-radius: 20px;
     padding: 0 20px;
     transition: all .3s;
+    margin: 0 15px; /* Отступы между кнопками */
 }
 .button-container {
     display: flex; /* Используем Flexbox для расположения кнопок в строку */
@@ -68,13 +69,23 @@ a {
 .button-container button {
     border: none; /* Убираем рамку */
     border-radius: 15px; /* Закругленные углы */
-    padding: 5px 10px; /* Отступы внутри кнопки */
+    padding: 0px 10px; /* Отступы внутри кнопки */
     cursor: pointer; /* Указатель при наведении */
     transition: background-color 0.3s ease; /* Плавный переход цвета фона */
 }
 
 .button-container button:hover {
     opacity: 0.8; /* Эффект при наведении */
+}
+
+/* Стили для кнопки сохранения */
+.button-save {
+    border: 2px solid #414FB5;
+    border-radius: 20px;
+    padding: 0px 20px;
+    transition: all .3s;
+    background: transparent;
+    margin: 0 20px; /* Отступы между кнопками */
 }
 .dark .container {
     max-width: 1780px;
@@ -85,6 +96,10 @@ a {
     max-width: 1780px;
     width: 100%;
     margin: 0 auto;
+    padding-top: 50px;
+}
+.white .generate_button-container {
+    padding: 0 0 50px;
 }
 .index-main {
     height: 94.2vh;
@@ -321,10 +336,12 @@ footer {
     border-bottom: 2px solid #ccc;
 }
 .header-right {
-    display: flex;
+    display: flex; 
+    justify-content: space-between; 
+    gap: 0px 20px;
 }
 .header__edit-button {
-    margin-right: 1rem;
+    margin: 0px 0px;
 }
 /* Left side - Account */
 .account {
@@ -408,9 +425,6 @@ footer {
     padding: 20px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
-}
-.white .container {
-    padding: 50px 0;
 }
 table {
     width: 100%;
