@@ -6,12 +6,7 @@ import os
 def calc_data(region, sheet_name, columns: list) -> list:
   """function for all necessary calculations from table sheets"""
   # open specifyed sheet from xlsx
-<<<<<<< HEAD
-  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name).fillna(0)
-
-=======
   data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name)
->>>>>>> refs/remotes/origin/main
   #find region row
   ind_of_state = data_df.loc[data_df.loc[data_df[columns[1]] == '{}'.format(region)].index,[columns[0]]]
   #deviation between plan and fact
