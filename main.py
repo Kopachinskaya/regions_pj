@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, json
-from flask_restful import Api, Resource 
 import dashboard as dshb
 import requests
 import json
@@ -11,23 +10,26 @@ app.secret_key = 'your_secret_key'
 
 @app.route('/', methods = ['GET', 'POST'])
 def form():
-    template = render_template('index.html', 
+    if request.method == 'POST':
+         region =  request.values.get('regionSearchInput')
+         session['region']  = region 
+         return redirect(url_for('dashboard'))
+    template = render_template('page2.html', 
                            page_name= 'Index')
     return template
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
-    region =  request.values.get('regionSearchInput')
-    session['region'] = region
+    region = session.get('region')
+    data = dshb.data_to_web(region)
     if request.method == 'POST':
+        session.pop('region')
+        region =  request.values.get('regionSearchInput')
         data = dshb.data_to_web(region)
-        template = render_template('page1.html',
+    template = render_template('page1.html',
                                 data = data, 
                                 region = region,
                                 page_name= 'Dashboard')
-    else:
-        template = render_template('page2.html', 
-                                   page_name= 'Dashboard')
         
     return template
 

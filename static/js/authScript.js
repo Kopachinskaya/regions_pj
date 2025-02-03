@@ -22,7 +22,7 @@ function login() {
 
     // Проверка логина и пароля
     if (email === 'azarova_04@internet.ru' && password === '00000000') {
-        window.location.href = '/dashboard'; // Переход на страницу 1
+        window.location.href = 'page1.html'; // Переход на страницу 1
     } else {
         alert('Неправильный логин или пароль!'); // Сообщение об ошибке
     }

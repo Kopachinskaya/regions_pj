@@ -1,6 +1,6 @@
     
             // Optionally, if you want to handle form submission via JS (AJAX)
-            document.getElementById('saveDataButton').addEventListener('submit', async function(e) {
+            document.getElementById('table-data-info').addEventListener('submit', async function(e) {
                 e.preventDefault(); // Prevent default form submission
     
                 const formData = new FormData(this);
@@ -20,8 +20,5 @@
             
                 const result = await response.json();
                 console.log(result)
-<<<<<<< HEAD
                 window.location.reload()
-=======
->>>>>>> refs/remotes/origin/main
             });

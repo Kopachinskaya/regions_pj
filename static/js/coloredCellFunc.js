@@ -9,11 +9,11 @@ divationCells.forEach(divationCell => {
     // Получаем родительский элемент td
     const parentTd = divationCell.parentElement;
     // Проверяем, насколько большой процент и красим в соответсвущий цвет
-    if (deviationCellNumber <= 18) {
+    if (deviationCellNumber <= 10) {
         parentTd.classList.add('highlight-green');
-    } else if (deviationCellNumber <= 40) {
+    } else if (deviationCellNumber <= 20) {
         parentTd.classList.add('highlight-yellow');
-    } else if (deviationCellNumber > 40) {
+    } else if (deviationCellNumber > 20) {
         parentTd.classList.add('highlight-red');
     }
 });

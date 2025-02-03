@@ -1,32 +1,10 @@
-// Редактор текста
+// Объявление переменных
 const editButton = document.querySelector('.header__edit-button');
 const editButtonsBlockList = document.querySelectorAll('.edit-buttons'); 
 let isActive = false;
 
-document.addEventListener('click', (e) => {
-    if (e.target === editButton) {
-        editButton.classList.toggle('button--primary');
-        isActive = !isActive;
 
-        const editableElements = document.querySelectorAll('.info-table-thead th, td');
-
-        editableElements.forEach(element => {
-            if (isActive) {
-                element.classList.add('edit-active');
-                element.setAttribute('contenteditable', 'true');
-            } else {
-                element.classList.remove('edit-active');
-                element.removeAttribute('contenteditable');
-            }
-        });
-
-        editButtonsBlockList.forEach(editButtonsBlockItem => {
-            editButtonsBlockItem.style.display = isActive ? 'block' : 'none';
-        });
-    }
-});
-
-// Добавить строку
+// Функция для добавления строки
 function addRow() {
     const table = event.target.closest('.table-wrap').querySelector('table');
     let maxCellCount = 0;
@@ -43,50 +21,21 @@ function addRow() {
     for (let i = 0; i < maxCellCount; i++) {
         const newCell = newRow.insertCell(i);
         newCell.setAttribute('contenteditable', 'true'); // Делаем ячейку редактируемой
+        newCell.innerText = `Новая ячейка ${i + 1}`;
     }
 }
 
-// Удалить строку
+// Функция для удаления строки
 function deleteRow() {
     const table = event.target.closest('.table-wrap').querySelector('table');
     const rowCount = table.rows.length;
 
     if (rowCount > 1) {
-        table.deleteRow(rowCount - 1);
+        table.deleteRow(-1);
     } else {
         alert('Нельзя удалить все строки!');
     }
 }
-
-/* // Добавить столбец
-function addColumn() {
-    const table = event.target.closest('.table-wrap').querySelector('table');
-
-    for (let i = 0; i < table.rows.length; i++) {
-        const newCell = table.rows[i].insertCell(-1);
-        
-        if (i === 0) {
-            newCell.innerHTML = 'Новый столбец';
-        } else {
-            newCell.setAttribute('contenteditable', 'true');
-        }
-    }
-}
-
-// Удалить столбец
-function deleteColumn() {
-    const table = event.target.closest('.table-wrap').querySelector('table');
-    const colCount = table.rows[0].cells.length;
-
-    if (colCount > 1) { // Убедимся, что не удаляем все столбцы
-        for (let i = 0; i < table.rows.length; i++) {
-            const lastCellIndex = table.rows[i].cells.length - 1; // Индекс последней ячейки
-            table.rows[i].deleteCell(lastCellIndex); // Удаляем последнюю ячейку в текущей строке
-        }
-    } else {
-        alert('Нельзя удалить все столбцы!'); // Предупреждение, если останется только один столбец
-    }
-} */
 
 // Функция для добавления заголовка
 function addHeader(color) {
@@ -110,33 +59,133 @@ function addHeader(color) {
             break;
     }
 
-    // Добавляем кнопки для добавления и удаления строк под новым заголовком
     addRowButtons(newRow.rowIndex);
 }
 
 // Функция для добавления кнопок под заголовком
 function addRowButtons(headerRowIndex) {
     const rowButtonsDiv = document.getElementById("rowButtons");
-    
-    // Создаем контейнер для кнопок
+    if (!rowButtonsDiv) return; // Проверка на существование элемента
+
     const buttonContainer = document.createElement('div');
-    
-    // Кнопка для добавления строки
+
     const addButton = document.createElement('button');
     addButton.innerText = 'Добавить строку';
     
-    // Устанавливаем обработчик события на кнопку добавления строки
     addButton.onclick = function() { addRow(headerRowIndex); };
-    
-    // Кнопка для удаления строки
+
     const deleteButton = document.createElement('button');
     deleteButton.innerText = 'Удалить строку';
     
-    // Устанавливаем обработчик события на кнопку удаления строки
     deleteButton.onclick = function() { deleteRow(headerRowIndex); };
-    
-    buttonContainer.appendChild(addButton);
-    buttonContainer.appendChild(deleteButton);
     
     rowButtonsDiv.appendChild(buttonContainer);
 }
+
+// Добавление фото
+function initContainerSplit() {
+    const emptyBox = document.querySelector('.empty-box');
+    const plusButton = document.createElement('button');
+    plusButton.innerHTML = '+';
+    plusButton.classList.add('split-button');
+    plusButton.style.display = 'none';
+
+    let splitCount = 0; // Количество нажатий
+
+    plusButton.addEventListener('click', function handleSplit() {
+        splitCount++;
+
+        switch (splitCount) {
+            case 1:
+                // Первое нажатие: разделяем контейнер по высоте
+                const originalHeight = emptyBox.offsetHeight; // Запоминаем исходную высоту
+                const newHeight = (originalHeight - 5) / 2; // Учитываем расстояние 5px между контейнерами
+
+                emptyBox.style.height = `${newHeight}px`;
+
+                const newContainer1 = emptyBox.cloneNode(true);
+                newContainer1.style.height = `${newHeight}px`; // Высота второго контейнера с учетом отступа
+
+                // Удаляем кнопку `+` у первого контейнера
+                emptyBox.querySelector('.split-button').remove();
+
+                // Добавляем кнопку `+` только во второй контейнер
+                const newPlusButton = document.createElement('button');
+                newPlusButton.innerHTML = '+';
+                newPlusButton.classList.add('split-button');
+                newContainer1.appendChild(newPlusButton);
+
+                // Обработчик для деления по ширине
+                newPlusButton.addEventListener('click', function splitHorizontally() {
+                    // Создаем flex-контейнер для горизонтального размещения
+                    const horizontalWrapper = document.createElement('div');
+                    horizontalWrapper.style.display = 'flex';
+                    horizontalWrapper.style.width = '100%';
+                    horizontalWrapper.style.height = `${newContainer1.offsetHeight}px`;
+                    horizontalWrapper.style.gap = '20px'; // Отступ между контейнерами
+
+                    // Создаем два новых контейнера и делим по ширине
+                    const leftBox = newContainer1.cloneNode(true);
+                    const rightBox = newContainer1.cloneNode(true);
+                    leftBox.style.width = 'calc(50% - 2.5px)'; // Учитываем отступ
+                    rightBox.style.width = 'calc(50% - 2.5px)';
+                    leftBox.style.height = '100%';
+                    rightBox.style.height = '100%';
+
+                    // Удаляем кнопку `+` у второго контейнера после деления
+                    newPlusButton.remove();
+
+                    // Добавляем контейнеры в новый горизонтальный блок
+                    horizontalWrapper.appendChild(leftBox);
+                    horizontalWrapper.appendChild(rightBox);
+
+                    // Заменяем старый контейнер новым горизонтальным блоком
+                    newContainer1.replaceWith(horizontalWrapper);
+                });
+
+                emptyBox.parentNode.insertBefore(newContainer1, emptyBox.nextSibling);
+                break;
+        }
+    });
+
+    emptyBox.appendChild(plusButton);
+}
+
+// Вызов функции при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    initContainerSplit();
+
+    const editButton = document.querySelector('#editButton');
+
+    editButton.addEventListener('click', () => {
+        const splitButtons = document.querySelectorAll('.split-button');
+
+        splitButtons.forEach(button => {
+            button.style.display = button.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+});
+
+// Обработчик события для кнопки "Редактировать таблицу"
+document.addEventListener('click', (e) => {
+    if (e.target === editButton) {
+        isActive = !isActive; // Переключаем режим редактирования
+        editButton.classList.toggle('button--primary', isActive); // Меняем стиль кнопки в зависимости от состояния
+
+        const editableElements = document.querySelectorAll('.info-table-header__item, .info-table-thead th, td, .container-1 div');
+
+        editableElements.forEach(element => {
+            if (isActive) {
+                element.classList.add('edit-active');
+                element.setAttribute('contenteditable', 'true');
+            } else {
+                element.classList.remove('edit-active');
+                element.removeAttribute('contenteditable');
+            }
+        });
+
+        editButtonsBlockList.forEach(editButtonsBlockItem => {
+            editButtonsBlockItem.style.display = isActive ? 'block' : 'none';
+        });
+    }
+});
