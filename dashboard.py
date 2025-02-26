@@ -6,20 +6,20 @@ import os
 def calc_data(region, sheet_name, columns: list) -> list:
   """function for all necessary calculations from table sheets"""
   # open specifyed sheet from xlsx
-  data_df = pd.read_excel(r"regions_pj\2024.10.10 Дашборд.xlsx", sheet_name=sheet_name)
+  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=sheet_name).fillna(0)
   #find region row
   ind_of_state = data_df.loc[data_df.loc[data_df[columns[1]] == '{}'.format(region)].index,[columns[0]]]
   #deviation between plan and fact
   row_data_dict = {}
   deviation = data_df.loc[ind_of_state.index, [columns[3]]].fillna(0)
   fact = data_df.loc[ind_of_state.index, [columns[2]]].fillna(0)
-  plan = (deviation.values + fact.values)
-  if plan.item() == 0:
+  plan = (deviation.values.item() + fact.values.item())
+  if plan == 0:
     dev_per = 0
   else:
     dev_per = (deviation / plan)*100
   #fill dict values
-  row_data_dict["plan"] = plan.item()
+  row_data_dict["plan"] = plan
   row_data_dict["fact"] = fact.values.item()
   row_data_dict["deviation"] = (plan-fact).values.item()
   if row_data_dict["plan"]!= 0:
@@ -73,7 +73,7 @@ def data_to_web(region):
   data_to_web['tech_info'] = calc_data(region, sheet_name='Спецтехника', columns=['Unnamed: 0','Unnamed: 1', 'Unnamed: 5', 'Unnamed: 6'])
   data_to_web['container_places_info'] = calc_data(region, sheet_name='МНО', columns=[1,2,9,12])
   data_to_web['containers_info'] = calc_data(region, sheet_name='Контейнеры', columns=["Unnamed: 0","Unnamed: 1","Unnamed: 8","Unnamed: 11"])
-  data_to_web['all_RF_info'] = all_info_4_rus(pd.read_excel(r"regions_pj\2024.10.10 Дашборд.xlsx", sheet_name='Свод'))
+  data_to_web['all_RF_info'] = all_info_4_rus(pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name='Свод'))
   return data_to_web
 
 def clean_data(data):
@@ -87,7 +87,7 @@ def clean_data(data):
   return data
 
 def rewrite_new_data_to_xlxs(data):
-  data_df = pd.read_excel(r"regions_pj\2024.10.10 Дашборд.xlsx", sheet_name=['Свод', 'Контейнеры', 'МНО', 'Спецтехника'])
+  data_df = pd.read_excel(r"2024.10.10 Дашборд.xlsx", sheet_name=['Свод', 'Контейнеры', 'МНО', 'Спецтехника'])
 
   #technika
   data_df['Спецтехника'].loc[data_df['Спецтехника'].index[data_df['Спецтехника']['Unnamed: 1'].values == '{}'.format(data['region'])], 'Unnamed: 4'] = int(data['tech_plan'])
@@ -106,13 +106,10 @@ def rewrite_new_data_to_xlxs(data):
   data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 35] = float(data['containers_per_1k'])
   data_df['Свод'].loc[data_df['Свод'].index[data_df['Свод'][3].values == '{}'.format(data['region'])], 36] = float(data['fgis_utko_containers'])/100
 
-
-  with pd.ExcelWriter(r"regions_pj\2024.10.10 Дашборд.xlsx", engine='openpyxl') as writer:
-      data_df['Свод'].to_excel(writer, sheet_name='Свод')
-      data_df['Спецтехника'].to_excel(writer, sheet_name='Спецтехника')
-      data_df['МНО'].to_excel(writer, sheet_name='МНО')
-      data_df['Контейнеры'].to_excel(writer, sheet_name='Контейнеры')
-
-
+  with pd.ExcelWriter(r"2024.10.10 Дашборд.xlsx", engine='openpyxl',  mode='a', if_sheet_exists="replace") as writer:
+      data_df['Свод'].to_excel(writer, sheet_name='Свод', index=False)
+      data_df['Спецтехника'].to_excel(writer, sheet_name='Спецтехника', index=False)
+      data_df['МНО'].to_excel(writer, sheet_name='МНО', index=False)
+      data_df['Контейнеры'].to_excel(writer, sheet_name='Контейнеры', index=False)
 # region = 'Астраханская область'
 # print(data_to_web(region))

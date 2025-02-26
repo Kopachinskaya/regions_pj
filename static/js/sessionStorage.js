@@ -3,6 +3,7 @@ function savePageState() {
   const mainContent = document.querySelector('main'); // Главный контейнер
   if (mainContent) {
       sessionStorage.setItem('savedPage', mainContent.innerHTML);
+
   }
 }
 
@@ -47,6 +48,8 @@ function autoSaveOnEdit() {
 document.getElementById('saveDataButton').addEventListener('click', function () {
   savePageState();
   alert('Изменения сохранены!');
+
+
 });
 
 // Восстановление данных при загрузке страницы

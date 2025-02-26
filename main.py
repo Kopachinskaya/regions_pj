@@ -23,7 +23,7 @@ def dashboard():
     region = session.get('region')
     data = dshb.data_to_web(region)
     if request.method == 'POST':
-        session.pop('region')
+        # session.pop('region')
         region =  request.values.get('regionSearchInput')
         data = dshb.data_to_web(region)
     template = render_template('page1.html',
