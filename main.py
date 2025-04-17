@@ -8,6 +8,24 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 
+def data_table(region):
+    return jsonify({"response":dshb.data_to_web(region), "region":region})
+
+@app.route('/data_api', methods=['GET'])
+def initial_data():
+    region = session.get('region')
+    return data_table(region)
+
+@app.route('/table', methods = ['GET','POST'])
+def data_for_table():
+    region = session.get('region')
+    data = dshb.data_to_web(region)
+    template = render_template('table.html',
+                                data = data, 
+                                region = region,
+                                page_name= 'Table')
+    return template
+
 @app.route('/', methods = ['GET', 'POST'])
 def form():
     if request.method == 'POST':
@@ -40,6 +58,8 @@ def get_data():
     dshb.rewrite_new_data_to_xlxs(data)
     response = jsonify({"response": values})
     return response
+
+
 
 
 if __name__ == '__main__':

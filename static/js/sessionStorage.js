@@ -1,5 +1,6 @@
 // Функция для сохранения всей страницы в sessionStorage
 function savePageState() {
+  sessionStorage.removeItem('container-3')
   const mainContent = document.querySelector('main'); // Главный контейнер
   if (mainContent) {
       sessionStorage.setItem('savedPage', mainContent.innerHTML);
@@ -42,18 +43,18 @@ function restoreEventListeners() {
 // Функция для сохранения страницы при изменениях
 function autoSaveOnEdit() {
   document.addEventListener('input', savePageState);
+  
 }
 
 // Обработчик события для кнопки "Сохранить данные"
 document.getElementById('saveDataButton').addEventListener('click', function () {
   savePageState();
   alert('Изменения сохранены!');
-
-
 });
 
 // Восстановление данных при загрузке страницы
 window.addEventListener('load', function () {
   loadPageState();
   autoSaveOnEdit();
+  
 });

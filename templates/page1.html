@@ -146,146 +146,9 @@
 
             <!-- The container for data2server -->
             <div class="container container-3">
-                <form  method="POST" id = "table-data-info" name = "table-data-info">
-                        <table id = "info-table" class="info-table">
-                                <thead class="info-table-thead">
-                                    <tr>
-                                        <th  id = "th_region" class="info-table-thead__title">{{region}}</th>
-                                        <input type="hidden" id = "region" name="region" value = "">
-                                        <!-- /.info-table-thead__title -->
-                                        <th class="info-table-thead__title" colspan="4">По состоянию на 17.12.2024</th>
-                                        <!-- /.info-table-thead__title -->
-                                    </tr>
-                                </thead>
-                                <!-- /.info-table-thead -->
-                        <tbody class="info-table-tbody">
-                            <tr>
-                                <td class="info-table-td" colspan="2">
-                                    <div class="table-wrap">
-                                        <div class="button-container edit-buttons" style="display: none;">
-                                            <button onclick="addRow()">Добавить строку</button>
-                                            <button onclick="deleteRow()">Удалить строку</button>
-                                            <div id="rowButtons"></div>
-                                        </div>
-                                <table class="spcified-color">
-                                <tr>
-                                    <th class="cart">Корзины</th>
-                                    <th class="plan">План</th>
-                                    <th class="fact">Факт</th>
-                                    <th class="deivation">Отклонение</th>
-                                    <th class="event">Мероприятия из Дорожной карты</th>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start">
-                                        2. Обеспеченность специальной техникой, шт.
-                                        <br>(среднероссийский показатель потребности– {{data['all_RF_info']['tech_lack']}}%)</br>
-                                        <p>Выше среднероссийского показателя - желтая зона</p> 
-                                        <p>В два раза выше среднероссийского показателя  - красная зона</p>
-                                        </td>
-                                        <td id = "td_tech_plan" name="tech_plan">{{data['tech_info']['plan']}}</td>
-                                        <input type="hidden" id = "tech_plan" name="tech_plan" value ="">
-                                        <td id = "td_tech_fact" name="tech_fact">{{data['tech_info']['fact']}}</td>
-                                        <input type="hidden" id = "tech_fact" name="tech_fact" value = "">
-                                        <td id = "td_tech_dev" name="tech_dev" class="highlight-green">{{data['tech_info']['deviation']}} (<span class="percent">{{data['tech_info']['deviation_in_per']}}</span>%)</td>
-                                        <input type="hidden" id = "tech_dev" name="tech_dev" value = "">
-                                    <td class="road-map-text">Дорожная 
-                                        <br>карта</br>
-                                        <p>не требуется</p></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-at-start secondary-title">3. Обеспеченность инфраструктурой по накоплению ТКО</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start dis-flex-col">
-                                        3.1 контейнерные площадки (тыс. шт.)
-                                        <br>(среднероссийский показатель потребности – {{data['all_RF_info']['places_lack']}}%)</br>
-                                        <p>Выше среднероссийского показателя - желтая зона</p>
-                                        <p>В два раза выше среднероссийского показателя либо информация не представлена  - красная зона</p>                                            
-                                    </td>
-                                    <td id = "td_places_plan" name = 'places_plan'>{{data['container_places_info']['plan']}}</td>
-                                    <input type="hidden" id = "places_plan" name="places_plan" value= "">
-                                    <td id = "td_places_fact" name = 'places_fact'>{{data['container_places_info']['fact']}}</td>
-                                    <input type="hidden" id = "places_fact" name="places_fact" value= "">
-                                    <td id = "td_places_dev" name = 'places_dev'>{{data['container_places_info']['deviation']}} (<span class="percent">{{data['container_places_info']['deviation_in_per']}}</span>%)</td>
-                                    <input type="hidden" id = "places_dev" name="places_dev" value= "">
-                                    <td class="event road-map-text" rowspan="3">Дорожная 
-                                        <br>карта</br> 
-                                        <p>не утверждена</p></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start dis-flex-col table-cell-title content-margin-left">
-                                        3.1.1 контейнерные площадки на 1 000 чел.
-                                        <br>(среднероссийский показатель – {{data['all_RF_info']['places_per_1k']}} шт)</br>
-                                    </td>
-                                    <td>0</td>
-                                    <td id="td_container_places_per_1k" name="container_places_per_1k">{{'%0.1f'| format(data['container_places_info']['container_places_per_1k']|float)}}</td>
-                                    <input type="hidden" id="container_places_per_1k" name="container_places_per_1k" value= "">
-                                    <td>
-                                        {{'%0.1f'| format((data['all_RF_info']['places_per_1k']-data['container_places_info']['container_places_per_1k'])|float|abs)}} (<span>{{((data['all_RF_info']['places_per_1k']-data['container_places_info']['container_places_per_1k'])/data['all_RF_info']['places_per_1k']*100)|round|int|abs}}</span>%)
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start table-cell-title content-margin-left">
-                                    3.1.2 заполнение ФGIS УТКО по местам 
-                                    <br>накопления ТКО, %</br>
-                                    </td>
-                                    <td class="data-cell">100%</td>
-                                    <td id="td_fgis_utko_places" name="fgis_utko_places">{{data['container_places_info']['fgis_utko']}}%</td>
-                                    <input type="hidden" id="fgis_utko_places" name="fgis_utko_places" value= "">
-                                    <td><span>{{100 - data['container_places_info']['fgis_utko']}}</span>%</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start dis-flex-col">
-                                        3.2 контейнеры (тыс. шт.)
-                                        <br>(среднероссийский показатель потребности – {{data['all_RF_info']['containers_lack']}}%)</br>
-                                        <p>Выше среднероссийского показателя - желтая зона</p>
-                                        <p>В два раза выше среднероссийского показателя либо информация не представлена  - красная зона</p>
-                                    </td>
-                                    <td id = "td_containers_plan" name = 'containers_plan'>{{data['containers_info']['plan']}}</td>
-                                    <input type="hidden" id = "containers_plan" name="containers_plan" value= "">
-                                    <td id = "td_containers_fact"name = 'containers_fact'>{{data['containers_info']['fact']}}</td>
-                                    <input type="hidden" id = "containers_fact" name="containers_fact" value= "">
-                                    <td id = "td_containers_dev" name = 'containers_dev'>{{data['containers_info']['deviation']}} (<span class="percent">{{data['containers_info']['deviation_in_per']}}</span>%)</td>
-                                    <input type="hidden" id = "containers_dev" name="containers_dev" value= "">
-                                    <td class="event road-map-text" rowspan="3" >Дорожная 
-                                        <br>карта</br> 
-                                        <p>не утверждена</p></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start table-cell-title content-margin-left">
-                                        3.2.1 контейнеры на 1 000 чел.
-                                        <br>(среднероссийский показатель – {{data['all_RF_info']['containers_per_1k']}} шт)</br>
-                                    </td>
-                                    <td>0</td>
-                                    <td id="td_containers_per_1k" name="containers_per_1k">{{'%0.1f'| format(data['containers_info']['containers_per_1k']|float)}}</td>
-                                    <input type="hidden" id = "containers_per_1k" name="containers_per_1k" value= "">
-                                    <td>
-                                        {{'%0.1f'| format((data['all_RF_info']['containers_per_1k']-data['containers_info']['containers_per_1k'])|float|abs)}} (<span>{{((data['all_RF_info']['containers_per_1k']-data['containers_info']['containers_per_1k'])/data['all_RF_info']['containers_per_1k']*100)|round|int|abs}}</span>%)
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-at-start table-cell-title content-margin-left">
-                                    3.2.2 заполнение ФGIS УТКО на контейнеры
-                                    <br> ТКО, %</br>
-                                    </td>
-                                    <td>100%</td>
-                                    <td id="td_fgis_utko_containers" name="fgis_utko_containers">{{data['containers_info']['fgis_utko']}}%</td>
-                                    <input type="hidden" id = "fgis_utko_containers" name="fgis_utko_containers" value= "">
-                                    <td><span>{{100 - data['containers_info']['fgis_utko']}}</span>%</td>
-                                </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <!-- /.table-wrap -->
-                        </td>
-                    <!-- /.info-table-td -->
-                    </tr>
-                </tbody>
-                </table>
-                <button name = "submit" type="submit"  class="button button--primary">Обновить данные</button> 
-            </form> 
-        </div>
-
+                <iframe id="table-frame" src="/table" width="960" height="720"></iframe>
+                <button onclick="submitTable()">Submit Changes</button>
+            </div>
        
 
                     <div class="container container-4">
@@ -909,16 +772,19 @@
 <script src="./static/js/deviations.js"></script>
 <script>
     function exportHTMLtoPDF() {
+        // sessionStorage.clear()
+
        let htmlElement = document.getElementById('container');
        var opt = {
                     margin:       [0,0,0,0],
                     image:        { type: 'jpeg', quality: 1 },
                     html2canvas:  { scrollY: htmlElement.scrollY, scale: 1},
-                    jsPDF:        { unit: 'pt', format: 'a4', orientation: 'landscape', marginLeft: 20, marginRight: 20,},
+                    jsPDF:        { unit: 'pt', format: 'a4', orientation: 'landscape'},
                     pagebreak: {mode: 'avoid-all'}
                     };
 
        html2pdf().set(opt).from(htmlElement).save('exported_file.pdf');
+    //    
     }
 
     document.getElementById('exportButton').addEventListener('click', exportHTMLtoPDF);
